@@ -20,9 +20,9 @@ using namespace std;
 
 class Wordle{
 public:
-    vector<string> dictionary;
-    vector<string> working_set;
-    unordered_map<char, unordered_map<int, vector<string>>> map;
+    set<string> dictionary;
+    set<string> working_set;
+    unordered_map<char, unordered_map<int, set<string>>> map;
     
     int possible_words = -1;
     
@@ -70,7 +70,7 @@ public:
         while (getline(file, word)){
             
             //string* word_ptr = &word;
-            dictionary.push_back(word);
+            dictionary.insert(word);
             //cout << word << endl;
             
             // Populate map
@@ -82,17 +82,17 @@ public:
                 char letter = word[j];
                 
                 // whole set
-                map[letter][0].emplace_back(word);
+                map[letter][0].insert(word);
                 
                 // index set
-                map[letter][j + 1].emplace_back(word);
+                map[letter][j + 1].insert(word);
                 
             }
             
             
         }
         
-        working_set.reserve(dictionary.size());
+        //working_set.reserve(dictionary.size());
         
         cout << "Ready" << endl;
         
@@ -104,12 +104,12 @@ public:
         
         for (auto x : green){
             // Narrow dictionary down to only words with letter at correct index
-            sort(dictionary.begin(), dictionary.end());
-            sort(map[guess[x]][0].begin(), map[guess[x]][0].end());
+            //sort(dictionary.begin(), dictionary.end());
+            //sort(map[guess[x]][0].begin(), map[guess[x]][0].end());
+            //                                                                   x?                        x?
+            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()));
             
-            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), working_set.begin());
-            
-            sort(working_set.begin(), working_set.end());
+            //sort(working_set.begin(), working_set.end());
             dictionary = working_set;
             working_set = {};
             grays.erase(x);
@@ -118,12 +118,12 @@ public:
         for (auto x : yellow){
             //size_t x = static_cast<size_t>(y);
             // Narrow dictionary down by elim words that have letter at spec index
-            sort(dictionary.begin(), dictionary.end());
-            sort(map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end());
+            //sort(dictionary.begin(), dictionary.end());
+            //sort(map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end());
             
-            set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), working_set.begin());
+            set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()));
             
-            sort(working_set.begin(), working_set.end());
+            //sort(working_set.begin(), working_set.end());
             dictionary = working_set;
             working_set = {};
             grays.erase(x);
@@ -133,12 +133,12 @@ public:
         // Narrow down dictionary by eliminating gray letters
         for (auto x : grays){
             
-            sort(dictionary.begin(), dictionary.end());
-            sort(map[guess[x]][0].begin(), map[guess[x]][0].end());
+            //sort(dictionary.begin(), dictionary.end());
+            //sort(map[guess[x]][0].begin(), map[guess[x]][0].end());
             
-            set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), working_set.begin());
+            set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()));
             
-            sort(working_set.begin(), working_set.end());
+            //sort(working_set.begin(), working_set.end());
             dictionary = working_set;
             working_set = {};
             
@@ -169,13 +169,13 @@ public:
                 
             }
             
-            cout << "Enter indices of green tiles, when done enter -1: " << endl;
+            cout << "Enter indices of green tiles, seperated by spaces, end with -1: " << endl;
             while (cin >> green){
                 if (green == -1) { break; }
                 g.push_back(green);
             }
             
-            cout << "Enter indices of yellow tiles seperated by spaces: " << endl;
+            cout << "Enter indices of yellow tiles seperated by spaces, end with -1: " << endl;
             while (cin >> yellow){
                 if (yellow == -1) { break; }
                 y.push_back(yellow);
