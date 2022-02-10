@@ -22,9 +22,7 @@ class Wordle{
 public:
     set<string> dictionary;
     set<string> working_set;
-    unordered_map<char, unordered_map<int, set<string>>> map;
-    
-    int possible_words = -1;
+    unordered_map<char, unordered_map<int, set<string> > > map;
     
     void get_options(int argc, char** argv) {
         int option_index = 0, option = 0;
