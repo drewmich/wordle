@@ -44,7 +44,10 @@ public:
                 
                 // Beginning word
                 case 'h':
-                    cerr << "A CLI to assist in solving daily wordle challenges!\n";
+                    cout << "A CLI to assist in solving daily wordle challenges!\n";
+                    cout << "Example:" << endl;
+                    cout << "Enter indices of green tiles, seperated by spaces, end with -1: " << endl;
+                    cout << "0 2 3 -1" << endl;
                     break;
                 
                 case 'n':
@@ -60,8 +63,6 @@ public:
     void readInDict(){
         
         cout << "Preparing. . .\n";
-        
-        //int dictlength = 5757;
         string word;
         
         ifstream file;
@@ -69,14 +70,9 @@ public:
         
         while (getline(file, word)){
             
-            //string* word_ptr = &word;
             dictionary.insert(word);
-            //cout << word << endl;
-            
+ 
             // Populate map
-            
-            
-            
             for (int j = 0; j < 5; ++j){
                 
                 char letter = word[j];
@@ -89,10 +85,7 @@ public:
                 
             }
             
-            
         }
-        
-        //working_set.reserve(dictionary.size());
         
         cout << "Ready" << endl;
         
@@ -103,47 +96,36 @@ public:
         unordered_set<int> grays = {0, 1, 2, 3, 4};
         
         for (auto x : green){
-            // Narrow dictionary down to only words with letter at correct index
-            //sort(dictionary.begin(), dictionary.end());
-            //sort(map[guess[x]][0].begin(), map[guess[x]][0].end());
-    
-            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()));
             
-            //sort(working_set.begin(), working_set.end());
+            // Narrow dictionary down to only words with letter at correct index
+            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()));
+
             dictionary = working_set;
             working_set = {};
             grays.erase(x);
         }
             
         for (auto x : yellow){
-            //size_t x = static_cast<size_t>(y);
+
             // Narrow dictionary down by elim words that have letter at spec index
-            //sort(dictionary.begin(), dictionary.end());
-            //sort(map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end());
-            
             set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()));
             
             dictionary = working_set;
             working_set = {};
             
+            // Narrow dict down to only words with letter at other indices
             set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()));
             
-            //sort(working_set.begin(), working_set.end());
             dictionary = working_set;
             working_set = {};
             grays.erase(x);
         }
             
-        
-        // Narrow down dictionary by eliminating gray letters
         for (auto x : grays){
             
-            //sort(dictionary.begin(), dictionary.end());
-            //sort(map[guess[x]][0].begin(), map[guess[x]][0].end());
-            
+            // Narrow down dictionary by eliminating gray letters
             set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()));
             
-            //sort(working_set.begin(), working_set.end());
             dictionary = working_set;
             working_set = {};
             
@@ -163,10 +145,10 @@ public:
             vector<int> g = {};
             vector<int> y = {};
             
-            
             cout << "---------" << endl;
             cout << "Enter guess #" << i + 1 << ": ";
             cin >> guess;
+            
             if (guess.length() != 5) {
                 
                 cerr << "Error: incorrect word length" << endl;
@@ -190,6 +172,17 @@ public:
             
             // If set size < 10 print words
             cout << "dict size: " << dictionary.size() << endl;
+            
+            if (dictionary.size() == 1){
+                
+                cout << "Answer: ";
+                for (auto word : dictionary){
+                    cout << word << endl;
+                }
+                return;
+                
+            }
+            
             if (dictionary.size() <= 10){
                 cout << "Possible words:" << endl;
                 
@@ -199,7 +192,6 @@ public:
                     
                 }
             }
-            
             
         }
         
@@ -211,14 +203,6 @@ int main(int argc, char *argv[]) {
     
     ios_base::sync_with_stdio(false);
     //xcode_redirect(argc, argv);
-    
-//    vector<int> one = {1, 2, 3, 4, 5};
-//    vector<int> two = {3, 4};
-//    vector<int> result(10);
-//
-//    set_difference(one.begin(), one.end(), two.begin(), two.end(), result.begin());
-    
-    
     
     Wordle p;
     
