@@ -106,8 +106,8 @@ public:
             // Narrow dictionary down to only words with letter at correct index
             //sort(dictionary.begin(), dictionary.end());
             //sort(map[guess[x]][0].begin(), map[guess[x]][0].end());
-            //                                                                   x?                        x?
-            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()));
+    
+            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()));
             
             //sort(working_set.begin(), working_set.end());
             dictionary = working_set;
@@ -122,6 +122,11 @@ public:
             //sort(map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end());
             
             set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()));
+            
+            dictionary = working_set;
+            working_set = {};
+            
+            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()));
             
             //sort(working_set.begin(), working_set.end());
             dictionary = working_set;
