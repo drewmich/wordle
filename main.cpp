@@ -11,6 +11,7 @@
 #include <vector>
 #include <string>
 #include <set>
+#include <queue>
 #include <unordered_set>
 #include <unordered_map>
 #include "xcode_redirect.hpp"
@@ -20,9 +21,38 @@ using namespace std;
 
 class Wordle{
 public:
-    set<string> dictionary;
-    set<string> working_set;
-    unordered_map<char, unordered_map<int, set<string>>> map;
+    struct Tile{
+        
+        Tile(string str, uint32_t o){
+            word = str;
+            order = 0;
+        }
+        
+        string word;
+        uint32_t order;
+    };
+    
+    struct Comp_s{
+        bool operator()(Tile* t1, Tile* t2){
+            
+            return t1->word < t2->word;
+            
+        }
+    };
+    
+    struct Comp_o{
+        bool operator()(Tile* t1, Tile* t2){
+            
+            return t1->order < t2->order;
+            
+        }
+    };
+    
+    priority_queue<Tile*, vector<Tile*>, Comp_o> nextWord;
+    vector<Tile*> data;
+    set<Tile*, Comp_s> dictionary;
+    set<Tile*, Comp_s> working_set;
+    unordered_map<char, unordered_map<int, set<Tile*, Comp_s>>> map;
     
     int possible_words = -1;
     
@@ -68,9 +98,14 @@ public:
         ifstream file;
         file.open("sgb-words.txt", ifstream::in);
         
+        uint32_t i = 0;
         while (getline(file, word)){
             
-            dictionary.insert(word);
+            Tile* tile_ptr = new Tile(word, i);
+            
+            //string* word_ptr = new string(word);
+            nextWord.push(tile_ptr);
+            dictionary.insert(tile_ptr);
  
             // Populate map
             for (int j = 0; j < 5; ++j){
@@ -78,12 +113,14 @@ public:
                 char letter = word[j];
                 
                 // whole set
-                map[letter][0].insert(word);
+                map[letter][0].insert(tile_ptr);
                 
                 // index set
-                map[letter][j + 1].insert(word);
+                map[letter][j + 1].insert(tile_ptr);
                 
             }
+            
+            i++;
             
         }
         
@@ -177,7 +214,7 @@ public:
                 
                 cout << "Answer: ";
                 for (auto word : dictionary){
-                    cout << word << endl;
+                    cout << word->word << endl;
                 }
                 return;
                 
@@ -188,7 +225,7 @@ public:
                 
                 for (auto word : dictionary){
                     
-                    cout << word << endl;
+                    cout << word->word << endl;
                     
                 }
             }
