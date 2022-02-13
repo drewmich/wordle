@@ -91,7 +91,7 @@ public:
     
     void fillSet(string guess, vector<int> yellow, vector<int> green){
         
-        unordered_set<int> grays = {0, 1, 2, 3, 4};
+        unordered_set<int> grays ( {0, 1, 2, 3, 4} );
         
         for (auto x : green){
             
