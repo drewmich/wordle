@@ -111,8 +111,7 @@ public:
             
             Tile* tile_ptr = new Tile(word, i);
             
-            //string* word_ptr = new string(word);
-            //nextWord.push(tile_ptr);
+            // nextWord.push(tile_ptr);
             dictionary.insert(tile_ptr);
             possibleGuesses.insert(tile_ptr);
  
@@ -143,10 +142,12 @@ public:
         
         for (auto x : green){
 
-            // set<Tile*, Comp_s> tempSet;
-            // guessedLetters.insert(x);
-            // set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()));
-            // possibleGuesses = tempSet;
+            // Create set of words using letters that have yet to be guessed
+            set<Tile*, Comp_s> tempSet;
+            guessedLetters.insert(x);
+            // Remove words in possibleGuesses that contain a guessed letter
+            set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()), Comp_s());
+            possibleGuesses = tempSet;
             
             // Narrow dictionary down to only words with letter at correct index
             set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()), Comp_s());
@@ -158,10 +159,12 @@ public:
             
         for (auto x : yellow){
 
-            // set<Tile*, Comp_s> tempSet;
-            // guessedLetters.insert(x);
-            // set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()));
-            // possibleGuesses = tempSet;
+            // Create set of words using letters that have yet to be guessed
+            set<Tile*, Comp_s> tempSet;
+            guessedLetters.insert(x);
+            // Remove words in possibleGuesses that contain a guessed letter
+            set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()), Comp_s());
+            possibleGuesses = tempSet;
 
             // Narrow dictionary down by elim words that have letter at spec index
             set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()), Comp_s());
@@ -179,10 +182,12 @@ public:
             
         for (auto x : grays){
 
-            // set<Tile*, Comp_s> tempSet;
-            // guessedLetters.insert(x);
-            // set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()));
-            // possibleGuesses = tempSet;
+            // Create set of words using letters that have yet to be guessed
+            set<Tile*, Comp_s> tempSet;
+            guessedLetters.insert(x);
+            // Remove words in possibleGuesses that contain a guessed letter
+            set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()), Comp_s());
+            possibleGuesses = tempSet;
             
             // Narrow down dictionary by eliminating gray letters
             set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()), Comp_s());
@@ -193,14 +198,6 @@ public:
         }
         
     }
-
-    // string nextGuess(){
-
-    //     // words that do not contain any guessed letters
-    //     // guessedLetters set
-    //     // possibleGuesses set, set_difference for each letter guessed
-
-    // }
     
     void prompt(){
         
@@ -239,9 +236,6 @@ public:
             
             fillSet(guess, y, g);
             
-            // If set size < 10 print words
-            // cout << "dict size: " << dictionary.size() << endl;
-            
             if (dictionary.size() == 1){
                 
                 cout << "Answer: ";
@@ -252,31 +246,30 @@ public:
                 
             }
 
-            // cout << "Suggested next guess: ";
+            cout << "Suggested next guess: ";
 
-            // priority_queue<Tile*, vector<Tile*>, Comp_o> nextWord(possibleGuesses.begin(), possibleGuesses.end());
+            priority_queue<Tile*, vector<Tile*>, Comp_o> nextWord(possibleGuesses.begin(), possibleGuesses.end());
 
-            // size_t yh = nextWord.size();
-            // int tel = nextWord.size();
-            // for (int i = 0; i < tel; ++i){
-            //     cout << nextWord.top()->word << endl;
-            //     nextWord.pop();
-            // }
-            //cout << nextWord.top()->word << endl;
-            // cout << yh << endl;
-            
+            if (nextWord.size() > 0) { cout << nextWord.top()->word << endl; }
 
+            cout << "10 possible answers:" << endl;
+            int k = 0;
+            for (auto word : dictionary){
+                if (k >= 10) { break; }
+                cout << word->word << endl;
+                k++;
 
-            
-            if (dictionary.size() <= 10){
-                cout << "Possible words:" << endl;
-                
-                for (auto word : dictionary){
-                    
-                    cout << word->word << endl;
-                    
-                }
             }
+
+            // if (dictionary.size() <= 10){
+            //     cout << "Possible words:" << endl;
+                
+            //     for (auto word : dictionary){
+                    
+            //         cout << word->word << endl;
+                    
+            //     }
+            // }
             
         }
         
