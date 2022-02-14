@@ -139,23 +139,17 @@ public:
     
     void fillSet(string guess, vector<int> yellow, vector<int> green){
         
-        vector<int> tg;
-        tg.push_back(1);
-        tg.push_back(2);
-        tg.push_back(3);
-        tg.push_back(4);
-        tg.push_back(5);
-        unordered_set<int> grays (tg.begin(), tg.end());
+        unordered_set<int> grays ( {0, 1, 2, 3, 4} );
         
         for (auto x : green){
 
-            set<Tile*, Comp_s> tempSet;
-            guessedLetters.insert(x);
-            set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()));
-            possibleGuesses = tempSet;
+            // set<Tile*, Comp_s> tempSet;
+            // guessedLetters.insert(x);
+            // set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()));
+            // possibleGuesses = tempSet;
             
             // Narrow dictionary down to only words with letter at correct index
-            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()));
+            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()), Comp_s());
 
             dictionary = working_set;
             working_set.clear();
@@ -164,19 +158,19 @@ public:
             
         for (auto x : yellow){
 
-            set<Tile*, Comp_s> tempSet;
-            guessedLetters.insert(x);
-            set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()));
-            possibleGuesses = tempSet;
+            // set<Tile*, Comp_s> tempSet;
+            // guessedLetters.insert(x);
+            // set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()));
+            // possibleGuesses = tempSet;
 
             // Narrow dictionary down by elim words that have letter at spec index
-            set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()));
+            set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][x + 1].begin(), map[guess[x]][x + 1].end(), inserter(working_set, working_set.begin()), Comp_s());
             
             dictionary = working_set;
             working_set.clear();
             
             // Narrow dict down to only words with letter at other indices
-            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()));
+            set_intersection(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()), Comp_s());
             
             dictionary = working_set;
             working_set.clear();
@@ -185,13 +179,13 @@ public:
             
         for (auto x : grays){
 
-            set<Tile*, Comp_s> tempSet;
-            guessedLetters.insert(x);
-            set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()));
-            possibleGuesses = tempSet;
+            // set<Tile*, Comp_s> tempSet;
+            // guessedLetters.insert(x);
+            // set_difference(possibleGuesses.begin(), possibleGuesses.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(tempSet, tempSet.begin()));
+            // possibleGuesses = tempSet;
             
             // Narrow down dictionary by eliminating gray letters
-            set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()));
+            set_difference(dictionary.begin(), dictionary.end(), map[guess[x]][0].begin(), map[guess[x]][0].end(), inserter(working_set, working_set.begin()), Comp_s());
             
             dictionary = working_set;
             working_set.clear();
@@ -258,18 +252,18 @@ public:
                 
             }
 
-            cout << "Suggested next guess: ";
+            // cout << "Suggested next guess: ";
 
-            priority_queue<Tile*, vector<Tile*>, Comp_o> nextWord(possibleGuesses.begin(), possibleGuesses.end());
+            // priority_queue<Tile*, vector<Tile*>, Comp_o> nextWord(possibleGuesses.begin(), possibleGuesses.end());
 
-            size_t yh = nextWord.size();
-            int tel = nextWord.size();
-            for (int i = 0; i < tel; ++i){
-                cout << nextWord.top()->word << endl;
-                nextWord.pop();
-            }
+            // size_t yh = nextWord.size();
+            // int tel = nextWord.size();
+            // for (int i = 0; i < tel; ++i){
+            //     cout << nextWord.top()->word << endl;
+            //     nextWord.pop();
+            // }
             //cout << nextWord.top()->word << endl;
-            cout << yh << endl;
+            // cout << yh << endl;
             
 
 
